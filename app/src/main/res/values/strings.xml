@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">InputNotifier</string>
+    <string name="title_devices">입력장치 알리미</string>
+
+    <string name="type_none">지정 안 함</string>
+    <string name="type_keyboard">키보드</string>
+    <string name="type_mouse">마우스</string>
+    <string name="type_other">기타</string>
+
+    <string name="empty_need_permission">페어링된 기기 목록을 보려면 근처 기기 권한이 필요합니다.</string>
+    <string name="empty_no_bluetooth">이 기기는 블루투스를 지원하지 않습니다.</string>
+    <string name="empty_bluetooth_off">블루투스를 켜면 페어링된 기기 목록이 표시됩니다.</string>
+    <string name="empty_no_devices">페어링된 블루투스 기기가 없습니다.</string>
+    <string name="action_grant_permission">권한 허용</string>
+</resources>

@@ -1,0 +1,13 @@
+# Gradle
+.gradle/
+build/
+
+# IDE
+.acside/
+.idea/
+*.iml
+local.properties
+
+# Signing
+*.jks
+*.keystore
