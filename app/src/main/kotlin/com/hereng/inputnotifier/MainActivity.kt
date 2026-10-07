@@ -2,15 +2,18 @@ package com.hereng.inputnotifier
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -24,9 +27,9 @@ class MainActivity : AppCompatActivity() {
     private var requestedFromButton = false
 
     private val requestPermission =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
             // 다시 묻지 않음 상태면 시스템 대화상자가 안 뜨므로 앱 설정으로 보낸다
-            val permanentlyDenied = !granted &&
+            val permanentlyDenied = !hasBluetoothPermission() &&
                 !shouldShowRequestPermissionRationale(Manifest.permission.BLUETOOTH_CONNECT)
             if (requestedFromButton && permanentlyDenied) openAppSettings()
             requestedFromButton = false
@@ -42,11 +45,20 @@ class MainActivity : AppCompatActivity() {
         binding.deviceList.adapter = adapter
         binding.grantButton.setOnClickListener {
             requestedFromButton = true
-            requestPermission.launch(Manifest.permission.BLUETOOTH_CONNECT)
+            requestPermission.launch(arrayOf(Manifest.permission.BLUETOOTH_CONNECT))
         }
+        binding.notificationBanner.setOnClickListener { openNotificationSettings() }
 
-        if (savedInstanceState == null && !hasBluetoothPermission()) {
-            requestPermission.launch(Manifest.permission.BLUETOOTH_CONNECT)
+        if (savedInstanceState == null) {
+            val missing = buildList {
+                if (!hasBluetoothPermission()) add(Manifest.permission.BLUETOOTH_CONNECT)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                    !hasPermission(Manifest.permission.POST_NOTIFICATIONS)
+                ) {
+                    add(Manifest.permission.POST_NOTIFICATIONS)
+                }
+            }
+            if (missing.isNotEmpty()) requestPermission.launch(missing.toTypedArray())
         }
     }
 
@@ -55,12 +67,16 @@ class MainActivity : AppCompatActivity() {
         refresh()
     }
 
-    private fun hasBluetoothPermission() =
-        ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) ==
-            PackageManager.PERMISSION_GRANTED
+    private fun hasPermission(permission: String) =
+        ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+
+    private fun hasBluetoothPermission() = hasPermission(Manifest.permission.BLUETOOTH_CONNECT)
 
     @SuppressLint("MissingPermission")
     private fun refresh() {
+        binding.notificationBanner.isVisible =
+            !NotificationManagerCompat.from(this).areNotificationsEnabled()
+
         if (!hasBluetoothPermission()) {
             showEmpty(R.string.empty_need_permission, showGrantButton = true)
             return
@@ -75,15 +91,17 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val items = bluetooth.bondedDevices.orEmpty()
+        val devices = bluetooth.bondedDevices.orEmpty()
+        val items = devices
             .map { device ->
                 DeviceItem(
                     address = device.address,
-                    name = device.name ?: device.address,
+                    name = device.displayName(),
                     type = store.getType(device.address),
                 )
             }
             .sortedBy { it.name.lowercase() }
+        syncNotification(devices)
         if (items.isEmpty()) {
             showEmpty(R.string.empty_no_devices)
             return
@@ -92,6 +110,19 @@ class MainActivity : AppCompatActivity() {
         binding.emptyView.isVisible = false
         binding.deviceList.isVisible = true
         adapter.submitList(items)
+    }
+
+    /** 리시버가 놓친 변화(종류 지정, 강제 종료 후 재실행 등)를 실제 연결 상태에 맞춘다. */
+    private fun syncNotification(devices: Collection<BluetoothDevice>) {
+        val connections = ConnectionStore(this)
+        for (device in devices) {
+            when (device.isConnectedOrNull()) {
+                true -> connections.setConnected(device.address, device.displayName())
+                false -> connections.setDisconnected(device.address)
+                null -> Unit
+            }
+        }
+        ConnectionNotifier.update(this)
     }
 
     private fun showEmpty(@StringRes message: Int, showGrantButton: Boolean = false) {
@@ -117,6 +148,13 @@ class MainActivity : AppCompatActivity() {
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
+    }
+
+    private fun openNotificationSettings() {
+        startActivity(
+            Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                .putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+        )
     }
 
     private fun openAppSettings() {

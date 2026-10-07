@@ -1,0 +1,16 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+  <!-- 키보드: 오른쪽 아래를 마우스 자리만큼 파낸 채운 도형 -->
+  <path
+      android:fillColor="@android:color/white"
+      android:fillType="evenOdd"
+      android:pathData="M90,60 L690,60 Q760,60 760,130 L760,300 A230,230 0 0,0 522,560 L90,560 Q20,560 20,490 L20,130 Q20,60 90,60 Z M90,150 h80 v80 h-80 Z M220,150 h80 v80 h-80 Z M350,150 h80 v80 h-80 Z M480,150 h80 v80 h-80 Z M610,150 h80 v80 h-80 Z M90,280 h80 v80 h-80 Z M220,280 h80 v80 h-80 Z M350,280 h80 v80 h-80 Z M150,420 h250 v60 h-250 Z"/>
+  <!-- 마우스 -->
+  <path
+      android:fillColor="@android:color/white"
+      android:fillType="evenOdd"
+      android:pathData="M750,340 A190,190 0 0,1 940,530 L940,750 A190,190 0 0,1 560,750 L560,530 A190,190 0 0,1 750,340 Z M725,430 h50 v130 h-50 Z"/>
+</vector>

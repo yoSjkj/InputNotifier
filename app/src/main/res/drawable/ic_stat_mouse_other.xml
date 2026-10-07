@@ -1,0 +1,16 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+  <!-- 마우스 -->
+  <path
+      android:fillColor="@android:color/white"
+      android:fillType="evenOdd"
+      android:pathData="M330,50 A270,270 0 0,1 600,320 L600,640 A270,270 0 0,1 60,640 L60,320 A270,270 0 0,1 330,50 Z M295,180 h70 v180 h-70 Z"/>
+  <!-- 기타: 점 -->
+  <path
+      android:fillColor="@android:color/white"
+      android:fillType="evenOdd"
+      android:pathData="M660,780 A130,130 0 1,1 920,780 A130,130 0 1,1 660,780 Z"/>
+</vector>

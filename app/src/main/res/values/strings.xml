@@ -12,4 +12,8 @@
     <string name="empty_bluetooth_off">블루투스를 켜면 페어링된 기기 목록이 표시됩니다.</string>
     <string name="empty_no_devices">페어링된 블루투스 기기가 없습니다.</string>
     <string name="action_grant_permission">권한 허용</string>
+    <string name="banner_notifications_off">알림이 꺼져 있어 상태표시줄 아이콘이 표시되지 않습니다. 눌러서 알림을 켜 주세요.</string>
+
+    <string name="channel_connection">연결 상태</string>
+    <string name="notification_connected">%1$s 연결됨</string>
 </resources>

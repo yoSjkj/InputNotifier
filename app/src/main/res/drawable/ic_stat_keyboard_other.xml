@@ -1,0 +1,16 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+  <!-- 키보드 -->
+  <path
+      android:fillColor="@android:color/white"
+      android:fillType="evenOdd"
+      android:pathData="M90,60 L870,60 Q940,60 940,130 L940,550 Q940,620 870,620 L90,620 Q20,620 20,550 L20,130 Q20,60 90,60 Z M85,150 h90 v90 h-90 Z M225,150 h90 v90 h-90 Z M365,150 h90 v90 h-90 Z M505,150 h90 v90 h-90 Z M645,150 h90 v90 h-90 Z M785,150 h90 v90 h-90 Z M85,290 h90 v90 h-90 Z M225,290 h90 v90 h-90 Z M365,290 h90 v90 h-90 Z M505,290 h90 v90 h-90 Z M645,290 h90 v90 h-90 Z M785,290 h90 v90 h-90 Z M280,440 h400 v80 h-400 Z"/>
+  <!-- 기타: 점 -->
+  <path
+      android:fillColor="@android:color/white"
+      android:fillType="evenOdd"
+      android:pathData="M680,790 A130,130 0 1,1 940,790 A130,130 0 1,1 680,790 Z"/>
+</vector>
